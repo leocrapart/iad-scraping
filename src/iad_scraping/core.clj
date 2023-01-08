@@ -197,7 +197,7 @@
     (save-workbook! filename wb)))
 
 
-(save-excel (data 10) "data.xlsx")
+(save-excel (data 1000) "data.xlsx")
 
 
 (def page 
