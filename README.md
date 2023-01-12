@@ -1,6 +1,9 @@
 # iad-scraping
 
-FIXME: description
+Clojure program to scrape iadfrance website
+Using no special library to scrape.
+
+Data stored in the excel file.
 
 ## Installation
 
