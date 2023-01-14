@@ -5,6 +5,9 @@ Using no special library to scrape.
 
 Data stored in the excel file.
 
+Next idea :
+Parrallel scraping of pages and store all the data in one excel.
+
 ## Installation
 
 Download from http://example.com/FIXME.
