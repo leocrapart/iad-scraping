@@ -179,6 +179,10 @@
 ; (count (for-excel data))
 (for-excel (data 10))
 
+
+
+
+
 ; to excel
 (use 'dk.ative.docjure.spreadsheet)
 (defn save-excel [data filename]
