@@ -182,7 +182,7 @@
 
 
 
-
+     
 ; to excel
 (use 'dk.ative.docjure.spreadsheet)
 (defn save-excel [data filename]
@@ -201,7 +201,8 @@
     (save-workbook! filename wb)))
 
 
-(save-excel (data 1000) "data.xlsx")
+; (save-excel (data 1000) "data.xlsx")
+(save-excel (data 2000) "data.xlsx")
 
 
 (def page 
