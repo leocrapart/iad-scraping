@@ -200,3 +200,23 @@
 ; (save-excel (data 1000) "data.xlsx")
 (save-excel (data 2000) "data.xlsx")
 
+
+;; plan
+; parrallel scraping
+; (scrape [0 1000] "data-0-1000.xlsx")
+; (scrape [1000 2000] "data-1000-2000.xlsx")
+; (scrape [2000 3000] "data-2000-3000.xlsx")
+; (scrape [3000 4000] "data-3000-4000.xlsx")
+; (scrape [4000 5000] "data-4000-5000.xlsx")
+; (scrape [6000 7000] "data-6000-7000.xlsx")
+; (scrape [7000 8000] "data-7000-8000.xlsx")
+; (scrape [8000 9000] "data-8000-9000.xlsx")
+; (scrape [9000 10000] "data-9000-10000.xlsx")
+; (scrape [10000 11000] "data-10000-11000.xlsx")
+; (scrape [11000 12000] "data-11000-12000.xlsx")
+; (scrape [12000 13000] "data-12000-13000.xlsx")
+; (scrape [13000 14000] "data-13000-14000.xlsx")
+
+
+; + function to compact all excels
+; (compact-excels)
