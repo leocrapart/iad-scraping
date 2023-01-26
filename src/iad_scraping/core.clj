@@ -201,6 +201,8 @@
 (save-excel (data 2000) "data.xlsx")
 
 
+
+
 ;; plan
 ; parrallel scraping
 ; (scrape [0 1000] "data-0-1000.xlsx")
