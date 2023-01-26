@@ -51,21 +51,42 @@
 (defn inject-new-lines [seq]
   (reduce inject-new-line seq))
 
-(defn save-seq-into-txt-file [file-name seq]
-  (spit file-name (inject-new-lines seq)))
+(defn save-seq-into-txt-file [filename seq]
+  (spit filename (inject-new-lines seq)))
 
 
 (def first-34-naturals (map inc (range 34)))
 
-(def first-1020-urls
-  (flatten
-    (map urls first-34-naturals)))
-; first-1020-urls
-
 (defn save-first-1020-urls []
   (save-seq-into-txt-file "1020-urls.txt" first-1020-urls))
 
-; (save-first-1020-urls)
+(defn urls-from-page-range [s-page-start s-page-end]
+  (let [number-of-pages (inc (- s-page-end s-page-start))
+        page-nums (map (partial + s-page-start) (range number-of-pages))]
+    (flatten
+      (map urls page-nums))))
+
+(def urls-test (vec (urls-from-page-range 35 35)))
+
+(str urls-test
+)
+
+; ("https://..." "https://...") -> "https://... \n https://..."
+
+; str concat
+; https://www.iadfrance.fr/annonce/maison-vente-4-pieces-pouzauges-226m2/r1208240
+; https://www.iadfrance.fr/annonce/appartement-vente-3-pieces-carbonne-67m2/r1238393
+
+(defn save-urls [urls filename]
+  (save-seq-into-txt-file urls filename))
+
+(save-urls (urls-from-page-range 35 36) "urls-35-36.txt")
+
+
+--------------------------------------------------
+--------------------------------------------------
+
+
 
 ; (def raw-prenom-nom-data 
 ;   (between (slurp "https://www.iadfrance.fr/annonce/maison-vente-4-pieces-pouzauges-226m2/r1208240")
@@ -128,10 +149,11 @@
 (defn remove-empty-strings [vec]
   (filter not-empty? vec))
 
-(def url-list 
+(defn url-list [urls-file]
   (remove-empty-strings
-    (clojure.string/split (slurp "1020-urls.txt") #"\n")))
+    (clojure.string/split (slurp urls-file) #"\n")))
 
+(url-list "urls-120-2040.txt")
 ; url-list
 ; (count url-list)
 
@@ -198,15 +220,16 @@
 
 
 ; (save-excel (data 1000) "data.xlsx")
-(save-excel (data 2000) "data.xlsx")
+(save-excel (data 1000) "data.xlsx")
 
 
 
 
 ;; plan
 ; parrallel scraping
-; (scrape [0 1000] "data-0-1000.xlsx")
-; (scrape [1000 2000] "data-1000-2000.xlsx")
+; (scrape [0 34] "data-0-34.xlsx")
+; (scrape [35 64] "data-35-64.xlsx")
+
 ; (scrape [2000 3000] "data-2000-3000.xlsx")
 ; (scrape [3000 4000] "data-3000-4000.xlsx")
 ; (scrape [4000 5000] "data-4000-5000.xlsx")
