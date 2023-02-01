@@ -6,6 +6,7 @@
   [& args]
   (println "Hello, World!"))
 
+
 (defn between [str regstart regend]
   (let [thing-and-more (second
                           (clojure.string/split str regstart))]
@@ -29,7 +30,7 @@
     (first
       (clojure.string/split string-x #">"))))
 
-(url 1 1)
+; (url 1 1)
 
 (def first-30-naturals (map inc (range 30)))
 
@@ -61,10 +62,12 @@
   (spit filename
     (reduce fuse-new-line urls)))
 
-(save-urls (urls-range 35 64) "urls-35-64.txt")
+; (save-urls (urls-range 65 100) "urls-65-100.txt")
+; (save-urls (urls-range 101 135) "urls-101-135.txt")
 
---------------------------------------------------
---------------------------------------------------
+
+;--------------------------------------------------
+;--------------------------------------------------
 
 
 ; (def raw-prenom-nom-data 
@@ -137,8 +140,8 @@
     ))
 
 
-(scrape-page "https://www.iadfrance.fr/annonce/maison-vente-4-pieces-pouzauges-226m2/r1208240")
-(scrape-page "https://www.iadfrance.fr/annonce/maison-vente-3-pieces-saint-aubin-epinay-71m2/r1242541")
+; (scrape-page "https://www.iadfrance.fr/annonce/maison-vente-4-pieces-pouzauges-226m2/r1208240")
+; (scrape-page "https://www.iadfrance.fr/annonce/maison-vente-3-pieces-saint-aubin-epinay-71m2/r1242541")
 
 
 ;;;;;;; READ
@@ -158,7 +161,7 @@
   (remove-empty-strings
     (clojure.string/split (slurp urls-filename) #"\n")))
 
-(url-list "urls-35-64.txt")
+; (url-list "urls-35-64.txt")
 ; url-list
 ; (count url-list)
 
@@ -206,7 +209,8 @@
   `[~title-list ~@(vec (map excel-row data))])
 
 ; (count (for-excel data))
-(for-excel (data 10))
+; (for-excel (data 10))
+
 
 ; to excel
 (use 'dk.ative.docjure.spreadsheet)
@@ -229,7 +233,7 @@
 ; (save-excel (data 1000) "data.xlsx")
 
 
-(count (url-list "urls-35-64.txt"))
+; (count (url-list "urls-35-64.txt"))
 
 
 (defn scrape [urls-filename excel-filename]
@@ -239,7 +243,8 @@
     (save-excel data excel-filename))
   )
 
-(scrape "urls-35-64.txt" "data-35-64.xlsx")
+(scrape "urls-65-100.txt" "contacts 3.xlsx")
+(scrape "urls-101-135.txt" "contacts 4.xlsx")
 ;4:02
 
 ;; plan
