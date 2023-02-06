@@ -1,5 +1,6 @@
 (ns iad-scraping.core
-  (:gen-class))
+  (:gen-class)
+  (:require [dk.ative.docjure.spreadsheet :as xl]))
 
 (defn -main
   "I don't do a whole lot ... yet."
@@ -223,7 +224,7 @@
                             ;  ]
                             (for-excel data)
                             )
-        sheet (select-sheet "vigneron data" wb)
+        sheet (select-sheet "data" wb)
         header-row (first (row-seq sheet))]
     (set-row-style! header-row (create-cell-style! wb {:background :yellow,
                                                        :font {:bold true}}))
@@ -243,8 +244,8 @@
     (save-excel data excel-filename))
   )
 
-(scrape "urls-65-100.txt" "contacts 3.xlsx")
-(scrape "urls-101-135.txt" "contacts 4.xlsx")
+; (scrape "urls-65-100.txt" "contacts 3.xlsx")
+; (scrape "urls-101-135.txt" "contacts 4.xlsx")
 ;4:02
 
 ;; plan
@@ -254,3 +255,75 @@
 
 ; + function to compact all excels
 ; (compact-excels)
+
+
+
+
+;-----------------------------
+;             VCF
+;-----------------------------
+
+
+; BEGIN:VCARD
+; VERSION:3.0
+; N;CHARSET=utf-8:AGUILHON IAD;Angélique
+; FN;CHARSET=utf-8:Angélique AGUILHON IAD
+; TEL;CELL:0646064554
+; END:VCARD
+
+(def contact-1
+  {:firstname "Angélique"
+   :lastname "AGUILHON"
+   :phone "0646064554"})
+
+(def contact-2
+  {:firstname "Gabrielle"
+   :lastname "Agricole"
+   :phone "0637769468"})
+
+(def contacts
+  [contact-1 contact-2])
+
+
+(defn vcard [contact]
+  (str "BEGIN:VCARD\r\n"
+       "VERSION:3.0\r\n"
+       "N;CHARSET=utf-8:" (contact :lastname) " IAD;" (contact :firstname) "\r\n"
+       "FN;CHARSET=utf-8:" (contact :firstname) " " (contact :lastname) " IAD\r\n" 
+       "TEL;CELL:" (contact :phone) "\r\n"
+       "END:VCARD\r\n"))
+
+(defn add-line [str-1 str-2]
+  (str str-1 "\r\n" str-2))
+
+(defn vcards [contacts]
+  (reduce add-line 
+    (map vcard contacts)))
+
+; (vcards contacts)
+; (vcard contact-2)
+
+; (spit "test.vcf" (vcards contacts))
+
+;; turn excel into contacts
+
+(defn contacts [excel-filename]
+  (->> (xl/load-workbook excel-filename)
+       (xl/select-sheet "data")
+       (xl/select-columns {:A :firstname, :B :lastname, :C :phone})
+       rest ; remove columns titles
+       ))
+
+; (contacts "contacts 3.xlsx")
+
+(defn excel-to-vcf [excel-filename]
+  (let [main-name (apply str
+                    (drop-last 5 excel-filename))
+        vcf-filename (str main-name ".vcf")]
+    (spit vcf-filename
+      (vcards 
+        (contacts excel-filename)))))
+
+; (excel-to-vcf "contacts 3.xlsx")
+; (excel-to-vcf "contacts 4.xlsx")
+
