@@ -324,6 +324,5 @@
       (vcards 
         (contacts excel-filename)))))
 
-; (excel-to-vcf "contacts 3.xlsx")
 ; (excel-to-vcf "contacts 4.xlsx")
 
