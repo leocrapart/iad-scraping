@@ -326,3 +326,6 @@
 
 ; (excel-to-vcf "contacts 4.xlsx")
 
+;; suite
+;; scrape new website
+;; scrape postal code to select good contacts
