@@ -65,6 +65,19 @@
 
 ; (save-urls (urls-range 65 100) "urls-65-100.txt")
 ; (save-urls (urls-range 101 135) "urls-101-135.txt")
+(save-urls (urls-range 136 150) "urls-136-150.txt")
+(save-urls (urls-range 151 165) "urls-151-165.txt")
+(save-urls (urls-range 166 180) "urls-166-180.txt")
+(save-urls (urls-range 181 230) "urls-181-230.txt")
+(save-urls (urls-range 231 300) "urls-231-300.txt")
+
+(save-urls (urls-range 136 136) "urls-136.txt")
+(save-urls (urls-range 136 136) "urls-136.txt")
+
+
+(save-urls (urls-range 136 136) "urls-136.txt")
+
+
 
 
 ;--------------------------------------------------
@@ -106,6 +119,30 @@
 ; (prenom raw-prenom-nom-data)
 ; (nom raw-prenom-nom-data)
 
+(defn postal-code [page]
+  (between page
+  #"postal_code\":\"FR_" #"\",\"collaborator_id"))
+
+; (postal-code 
+;   (slurp "https://www.iadfrance.fr/annonce/terrain-vente-0-piece-nantes-327m2/r1250645"))
+
+; (postal-code 
+;   (slurp "https://www.iadfrance.fr/annonce/appartement-vente-3-pieces-villiers-sur-marne-58m2/r1270261"))
+
+(defn to-department-code [postal-code]
+  (apply str
+    (take 2 postal-code)))
+
+; (to-department-code "43000")
+; (to-department-code "94350")
+
+(defn department-code [page]
+  (to-department-code (postal-code page)))
+
+; (department-code 
+;   (slurp "https://www.iadfrance.fr/annonce/appartement-vente-3-pieces-villiers-sur-marne-58m2/r1270261"))
+
+
 
 
 (def page-error 
@@ -129,11 +166,14 @@
         raw-prenom-nom-data (between page #"agent_name" #" </a> <div class=")
         prenom (prenom raw-prenom-nom-data)
         nom (nom raw-prenom-nom-data)
-        telephone (between page #"data-phone=" #" id=")]
+        telephone (between page #"data-phone=" #" id=")
+        department (department-code page)]
       {:prenom prenom
        :nom nom
        :telephone telephone
-       :url url}  
+       :department department
+       :url url
+     }  
       )
       ;; invalid page (has been removed)
       ;; return nothing
@@ -189,6 +229,7 @@
       [(page-data :prenom)
        (page-data :nom)
        (page-data :telephone)
+       (page-data :department)
        (page-data :url)
        ])))
 
@@ -198,16 +239,18 @@
     (remove nil?
       (map scrape-page (take n url-list)))))
 
+
 ; (def test-data
 ;   (data 54 (url-list "urls-35-64.txt")))
 ; (test-data 51)
 
 
 (def title-list 
-  ["prenom" "nom" "telephone" "url"])
+  ["prenom" "nom" "telephone" "department" "url"])
 
 (defn for-excel [data]
   `[~title-list ~@(vec (map excel-row data))])
+
 
 ; (count (for-excel data))
 ; (for-excel (data 10))
@@ -217,7 +260,7 @@
 (use 'dk.ative.docjure.spreadsheet)
 (defn save-excel [data filename]
   ;; Create a spreadsheet and save it
-  (let [wb (create-workbook "vigneron data"
+  (let [wb (create-workbook "data"
                             ; [["domain-name" "name-1" "name-2" "street-address" "postal-code" "locality" "mobile" "website" "wine-name" "wine-place" "wine-designation" "wine-domain" "wine-type" "wine-color"]
                             ;  (excel-row (data 0))
                             ;  (excel-row (data 1))
@@ -236,17 +279,31 @@
 
 ; (count (url-list "urls-35-64.txt"))
 
+(count (vec (url-list "urls-101-135.txt")))
+
 
 (defn scrape [urls-filename excel-filename]
   (let [urls (vec (url-list urls-filename))
-        n 900
+        n (count urls) ; scrape all urls in url-file -- can put a flat number if needed
         data (data n urls)]
     (save-excel data excel-filename))
   )
 
 ; (scrape "urls-65-100.txt" "contacts 3.xlsx")
 ; (scrape "urls-101-135.txt" "contacts 4.xlsx")
-;4:02
+
+(scrape "urls-136-150.txt" "contacts 5.xlsx")
+(scrape "urls-151-165.txt" "contacts 6.xlsx")
+(scrape "urls-166-180.txt" "contacts 7.xlsx")
+
+;; ici
+; (scrape "urls-181-230.txt" "contacts 8.xlsx")
+; (scrape "urls-231-300.txt" "contacts 9.xlsx")
+
+
+
+; 21h49 -> 
+
 
 ;; plan
 ; parrallel scraping
@@ -325,7 +382,12 @@
         (contacts excel-filename)))))
 
 ; (excel-to-vcf "contacts 4.xlsx")
+; (excel-to-vcf "contacts 5.xlsx")
+; (excel-to-vcf "contacts 6.xlsx")
+; (excel-to-vcf "contacts 7.xlsx")
 
 ;; suite
 ;; scrape new website
 ;; scrape postal code to select good contacts
+
+
